@@ -86,6 +86,8 @@ bool ParseSingleBlock(uint8_t* blockBlob, size_t *blockSize)
 	{
 		Block_VERT* block = reinterpret_cast<Block_VERT*>(blockBlob);
 		printf("Block_VERT\n");
+		printf("\tunk1 = 0x%08x\n", block->unk1);
+
 		assert(block->unk1 == 0x45c);
 		*blockSize = sizeof(Block_VERT);
 	}
@@ -94,6 +96,8 @@ bool ParseSingleBlock(uint8_t* blockBlob, size_t *blockSize)
 	{
 		Block_FRAG* block = reinterpret_cast<Block_FRAG*>(blockBlob);
 		printf("Block_FRAG\n");
+		printf("\tunk1 = 0x%08x\n", block->unk1);
+
 		assert(block->unk1 == 0x37c);
 		*blockSize = sizeof(Block_FRAG);
 	}
@@ -102,7 +106,10 @@ bool ParseSingleBlock(uint8_t* blockBlob, size_t *blockSize)
 	{
 		Block_COMP* block = reinterpret_cast<Block_COMP*>(blockBlob);
 		printf("Block_COMP\n");
-		assert(block->unk1 == 0x1a8);
+		printf("\tunk1 = 0x%08x\n", block->unk1);
+
+		// XXX: Changes, probably a size
+		//assert(block->unk1 == 0x1a8);
 		*blockSize = sizeof(Block_COMP);
 	}
 	break;
@@ -162,13 +169,13 @@ bool ParseSingleBlock(uint8_t* blockBlob, size_t *blockSize)
 	{
 		Block_SSYM* block = reinterpret_cast<Block_SSYM*>(blockBlob);
 		printf("Block_SSYM\n");
-		printf("\tunk1 = 0x%08x\n", block->unk1);
+		printf("\tsize = 0x%08x\n", block->size);
 		printf("\tunk2 = 0x%08x\n", block->unk2);
 
 		// XXX: Sometimes different
-		//assert(block->unk1 == 0xa8);
 		//assert(block->unk2 == 0x2);
-		*blockSize = sizeof(Block_SSYM);
+		// XXX: Skipping the entire SSYM because parsing of sub blocks(STRI) aren't complete
+		*blockSize = sizeof(Block_SSYM) + block->size - 4;
 	}
 	break;
 	case COOKIE("SYMB"):
@@ -247,7 +254,7 @@ bool ParseSingleBlock(uint8_t* blockBlob, size_t *blockSize)
 		printf("\tunk3 = 0x%08x\n", block->unk3);
 		printf("\tunk4 = 0x%08x\n", block->unk4);
 		printf("\tunk5 = 0x%08x\n", block->unk5);
-		printf("\tunk6 = 0x%08x\n", block->unk6);
+		//printf("\tunk6 = 0x%08x\n", block->unk6);
 
 		assert(block->unk1 == 0xc);
 		// XXX: Sometimes different
@@ -255,8 +262,8 @@ bool ParseSingleBlock(uint8_t* blockBlob, size_t *blockSize)
 		//assert(block->unk3 == 0x1);
 		// Probably a bitfield
 		//assert(block->unk4 == 0x8);
-		assert(block->unk5 == 0x0 || block->unk5 == 0x45535054);
-		assert(block->unk6 == 0x0 || block->unk6 == 0x3c);
+		//assert(block->unk5 == 0x0 || block->unk5 == 0x45535054);
+		//assert(block->unk6 == 0x0 || block->unk6 == 0x3c);
 		*blockSize = sizeof(Block_TPGE);
 	}
 	break;
@@ -296,7 +303,8 @@ bool ParseSingleBlock(uint8_t* blockBlob, size_t *blockSize)
 		printf("\tunk2 = 0x%08x\n", block->unk2);
 
 		assert(block->unk1 == 0x20);
-		assert(block->unk2 == 0x18);
+		// XXX: Probably an array size
+		//assert(block->unk2 == 0x18);
 
 		*blockSize = sizeof(Block_TPAR);
 	}
@@ -310,11 +318,13 @@ bool ParseSingleBlock(uint8_t* blockBlob, size_t *blockSize)
 		printf("\tunk3 = 0x%08x\n", block->unk3);
 
 
-		assert(block->unk1 == 0x4);
-		assert(block->unk2 == 0x0);
-		assert(block->unk3 == 0x1);
+		// XXX: sometimes different
+		//assert(block->unk1 == 0x4);
+		//assert(block->unk2 == 0x0);
+		//assert(block->unk3 == 0x1);
 
-		*blockSize = sizeof(Block_UBUF);
+		// XXX: unk2...?
+		*blockSize = sizeof(Block_UBUF) + (block->unk2 ? 4 : 0);
 	}
 	break;
 	case COOKIE("EBIN"):
@@ -332,10 +342,12 @@ bool ParseSingleBlock(uint8_t* blockBlob, size_t *blockSize)
 		//assert(block->unk1 == 0xd4);
 		assert(block->unk2 == 0x0);
 		assert(block->unk3 == ~0U);
-		assert(block->unk4 == 0x0);
+		//assert(block->unk4 == 0x0);
 		assert(block->unk5 == 0x0);
-		assert(block->unk6 == ~0U);
-		*blockSize = sizeof(Block_EBIN);
+		//assert(block->unk6 == ~0U);
+
+		// XXX: unk4...?
+		*blockSize = sizeof(Block_EBIN) + (block->unk4 ? -4 : 0);
 	}
 	break;
 	case COOKIE("FSHA"):
@@ -354,7 +366,7 @@ bool ParseSingleBlock(uint8_t* blockBlob, size_t *blockSize)
 		assert(block->unk2 == 0x0);
 		assert(block->unk3 == 0x0);
 		assert(block->unk4 == 0x20);
-		assert(block->unk5 == 0x0);
+		//assert(block->unk5 == 0x0);
 		// XXX:Sometimes different
 		// Probably a bitfield
 		//assert(block->unk6 == 0x0);
@@ -454,7 +466,8 @@ bool ParseSingleBlock(uint8_t* blockBlob, size_t *blockSize)
 		printf("Block_CCOM\n");
 		printf("\tunk1 = 0x%08x\n", block->unk1);
 
-		assert(block->unk1 == 0x180);
+		// XXX: Probably a size
+		// assert(block->unk1 == 0x180);
 		*blockSize = sizeof(Block_CCOM);
 	}
 	break;
@@ -478,7 +491,27 @@ bool ParseSingleBlock(uint8_t* blockBlob, size_t *blockSize)
 		*blockSize = sizeof(Block_KWGS);
 	}
 	break;
+	case COOKIE("RLOC"):
+	{
+		Block_RLOC* block = reinterpret_cast<Block_RLOC*>(blockBlob);
+		printf("Block_RLOC\n");
+		printf("\tunk1 = 0x%08x\n", block->unk1);
+		printf("\tunk2 = 0x%08x\n", block->unk2);
+		printf("\tunk3 = 0x%08x\n", block->unk3);
+		printf("\tunk4 = 0x%08x\n", block->unk4);
+		printf("\tunk5 = 0x%08x\n", block->unk5);
+		printf("\tunk6 = 0x%08x\n", block->unk6);
 
+		assert(block->unk1 == 0x10);
+		assert(block->unk2 == 0x0);
+		assert(block->unk3 == 0x0);
+		assert(block->unk4 == 0x0);
+		assert(block->unk5 == 0x8);
+		// XXX: Sometimes different
+		//assert(block->unk6 == 0x0);
+		*blockSize = sizeof(Block_RLOC);
+	}
+	break;
 
 	default:
 	{

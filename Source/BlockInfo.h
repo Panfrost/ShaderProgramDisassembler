@@ -103,7 +103,7 @@ struct Block_SSYM
 {
 	// SSYM
 	uint32_t cookie;
-	uint32_t unk1;
+	uint32_t size;
 	uint32_t unk2;
 };
 
@@ -146,7 +146,8 @@ struct Block_TPGE
 	uint32_t unk3;
 	uint32_t unk4;
 	uint32_t unk5;
-	uint32_t unk6;
+	// XXX: Sometimes doesn't exist?
+//	uint32_t unk6;
 };
 
 struct Block_TPIB
@@ -295,4 +296,17 @@ struct Block_KWGS
 	uint32_t local_x;
 	uint32_t local_y;
 	uint32_t local_z;
+};
+
+struct Block_RLOC
+{
+	// RLOC
+	uint32_t cookie;
+	uint32_t unk1;
+	uint32_t unk2;
+	uint32_t unk3;
+	uint32_t unk4;
+	uint32_t unk5;
+	uint32_t unk6;
+
 };

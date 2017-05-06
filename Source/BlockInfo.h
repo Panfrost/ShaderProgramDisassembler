@@ -44,6 +44,13 @@ struct Block_VERT
 	uint32_t unk1;
 };
 
+struct Block_FRAG
+{
+	// FRAG
+	uint32_t cookie;
+	uint32_t unk1;
+};
+
 struct Block_MBS2
 {
 	// MBS2
@@ -66,6 +73,7 @@ struct Block_CVER
 {
 	// CVER
 	uint32_t cookie;
+	// XXX: Version?
 	uint32_t unk1;
 };
 
@@ -79,6 +87,172 @@ struct Block_CMMN
 struct Block_VELA
 {
 	// VELA
+	uint32_t cookie;
+	uint32_t unk1;
+	uint32_t unk2;
+};
+
+struct Block_SSYM
+{
+	// SSYM
+	uint32_t cookie;
+	uint32_t unk1;
+	uint32_t unk2;
+};
+
+struct Block_SYMB
+{
+	// SYMB
+	uint32_t cookie;
+	uint32_t unk1;
+};
+
+struct Block_STRI
+{
+	// STRI
+	uint32_t cookie;
+	// Size in bytes padded to the nearest word
+	uint32_t size;
+	// There is a string here
+	uint32_t unk1;
+	uint32_t unk2;
+	uint32_t unk3;
+	uint32_t unk4;
+};
+
+struct Block_TYPE
+{
+	enum Type : uint32_t
+	{
+	};
+	// TYPE
+	uint32_t cookie;
+	Type type;
+};
+
+struct Block_TPGE
+{
+	// TPGE
+	uint32_t cookie;
+	uint32_t unk1;
+	uint32_t unk2;
+	uint32_t unk3;
+	uint32_t unk4;
+	uint32_t unk5;
+	uint32_t unk6;
+};
+
+struct Block_TPIB
+{
+	// TPIB
+	// Type buffer
+	uint32_t cookie;
+	uint32_t unk1;
+	uint32_t unk2;
+	uint32_t unk3;
+	uint32_t unk4;
+};
+struct Block_TPST
+{
+	// TPST
+	// Type struct
+	uint32_t cookie;
+	// XXX: Haven't seen it to fill it out
+};
+
+struct Block_TPSE
+{
+	// TPSE
+	// Type struct/buffer element
+	uint32_t cookie;
+	uint32_t unk1;
+};
+
+struct Block_TPAR
+{
+	// TPAR
+	// Type array
+	uint32_t cookie;
+	uint32_t unk1;
+	uint32_t unk2;
+};
+
+struct Block_UBUF
+{
+	// UBUF
+	uint32_t cookie;
+	uint32_t unk1;
+	uint32_t unk2;
+	uint32_t unk3;
+};
+
+struct Block_EBIN
+{
+	// EBIN
+	uint32_t cookie;
+	uint32_t unk1;
+	uint32_t unk2;
+	uint32_t unk3;
+	uint32_t unk4;
+	uint32_t unk5;
+	uint32_t unk6;
+};
+
+struct Block_FSHA
+{
+	// FSHA
+	uint32_t cookie;
+	uint32_t unk1;
+	uint32_t unk2;
+	uint32_t unk3;
+	uint32_t unk4;
+	uint32_t unk5;
+	uint32_t unk6;
+	uint32_t unk7;
+};
+
+struct Block_BFRE
+{
+	// BFRE
+	uint32_t cookie;
+	uint32_t unk1;
+	uint32_t unk2;
+};
+
+struct Block_SPDv
+{
+	// SPDv
+	uint32_t cookie;
+	uint32_t unk1;
+	uint32_t unk2;
+};
+
+struct Block_SPDf
+{
+	// SPDf
+	uint32_t cookie;
+	uint32_t unk1;
+	uint32_t unk2;
+	uint32_t unk3;
+};
+
+struct Block_OBJC
+{
+	// OBJC
+	uint32_t cookie;
+	uint32_t size;
+};
+
+struct Block_CFRA
+{
+	// CFRA
+	uint32_t cookie;
+	uint32_t unk1;
+};
+
+struct Block_BATT
+{
+	// BATT
 	uint32_t cookie;
 	uint32_t unk1;
 	uint32_t unk2;

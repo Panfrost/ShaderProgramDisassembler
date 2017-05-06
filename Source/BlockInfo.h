@@ -51,6 +51,13 @@ struct Block_FRAG
 	uint32_t unk1;
 };
 
+struct Block_COMP
+{
+	// COMP
+	uint32_t cookie;
+	uint32_t unk1;
+};
+
 struct Block_MBS2
 {
 	// MBS2
@@ -236,6 +243,14 @@ struct Block_SPDf
 	uint32_t unk3;
 };
 
+struct Block_SPDc
+{
+	// SPDc
+	uint32_t cookie;
+	uint32_t unk1;
+	uint32_t unk2;
+};
+
 struct Block_OBJC
 {
 	// OBJC
@@ -256,4 +271,28 @@ struct Block_BATT
 	uint32_t cookie;
 	uint32_t unk1;
 	uint32_t unk2;
+};
+
+struct Block_CCOM
+{
+	// CCOM
+	uint32_t cookie;
+	uint32_t unk1;
+};
+
+struct Block_KERN
+{
+	// KERN
+	uint32_t cookie;
+	uint32_t unk1;
+};
+
+struct Block_KWGS
+{
+	// KWGS
+	uint32_t cookie;
+	uint32_t unk1;
+	uint32_t local_x;
+	uint32_t local_y;
+	uint32_t local_z;
 };

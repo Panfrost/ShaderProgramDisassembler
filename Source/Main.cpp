@@ -53,6 +53,19 @@ void PrintFile(std::vector<uint8_t> *fileData, size_t offset = 0, size_t realpos
 	}
 }
 
+void DumpInstructions(uint8_t* instBlob, uint32_t size)
+{
+	// Instructions are 64bits
+	// Clause headers and tails are mainly 32bit
+	// There can be 64bit clause headers, no idea when they are used
+	uint8_t* instEnd = instBlob + size;
+	while (instBlob != instEnd)
+	{
+		printf("0x%08x\n", *(uint32_t*)instBlob);
+		instBlob += 4;
+	}
+}
+
 // Attempt to parse a single block with maxSize words
 bool ParseSingleBlock(uint8_t* blockBlob, size_t *blockSize)
 {
@@ -83,6 +96,14 @@ bool ParseSingleBlock(uint8_t* blockBlob, size_t *blockSize)
 		printf("Block_FRAG\n");
 		assert(block->unk1 == 0x37c);
 		*blockSize = sizeof(Block_FRAG);
+	}
+	break;
+	case COOKIE("COMP"):
+	{
+		Block_COMP* block = reinterpret_cast<Block_COMP*>(blockBlob);
+		printf("Block_COMP\n");
+		assert(block->unk1 == 0x1a8);
+		*blockSize = sizeof(Block_COMP);
 	}
 	break;
 	case COOKIE("MBS2"):
@@ -193,6 +214,8 @@ bool ParseSingleBlock(uint8_t* blockBlob, size_t *blockSize)
 		if (block.unk1 == 0x10)
 			*blockSize = sizeof(Block_STRI) + block.size - 12;
 		else if ((block.unk2 & 0xffff0000) == 0xffff0000)
+			*blockSize = sizeof(Block_STRI) + block.size - 4;
+		else if (block.unk2 == 0)
 			*blockSize = sizeof(Block_STRI) + block.size - 4;
 		else
 			*blockSize = sizeof(Block_STRI) + block.size;
@@ -379,6 +402,19 @@ bool ParseSingleBlock(uint8_t* blockBlob, size_t *blockSize)
 		*blockSize = sizeof(Block_SPDf);
 	}
 	break;
+	case COOKIE("SPDc"):
+	{
+		Block_SPDc* block = reinterpret_cast<Block_SPDc*>(blockBlob);
+		printf("Block_SPDc\n");
+		printf("\tunk1 = 0x%08x\n", block->unk1);
+		printf("\tunk2 = 0x%08x\n", block->unk2);
+
+		assert(block->unk1 == 0x4);
+		assert(block->unk2 == 0x0);
+		*blockSize = sizeof(Block_SPDc);
+	}
+	break;
+
 	case COOKIE("OBJC"):
 	{
 		Block_OBJC* block = reinterpret_cast<Block_OBJC*>(blockBlob);
@@ -386,6 +422,7 @@ bool ParseSingleBlock(uint8_t* blockBlob, size_t *blockSize)
 		printf("\tsize = 0x%08x\n", block->size);
 		// XXX: Bunch of instructions here?
 
+		DumpInstructions(blockBlob + 4, block->size);
 		*blockSize = sizeof(Block_OBJC) + block->size;
 	}
 	break;
@@ -411,6 +448,38 @@ bool ParseSingleBlock(uint8_t* blockBlob, size_t *blockSize)
 		*blockSize = sizeof(Block_BATT);
 	}
 	break;
+	case COOKIE("CCOM"):
+	{
+		Block_CCOM* block = reinterpret_cast<Block_CCOM*>(blockBlob);
+		printf("Block_CCOM\n");
+		printf("\tunk1 = 0x%08x\n", block->unk1);
+
+		assert(block->unk1 == 0x180);
+		*blockSize = sizeof(Block_CCOM);
+	}
+	break;
+	case COOKIE("KERN"):
+	{
+		Block_KERN* block = reinterpret_cast<Block_KERN*>(blockBlob);
+		printf("Block_KERN\n");
+		printf("\tunk1 = 0x%08x\n", block->unk1);
+
+		assert(block->unk1 == 0x30);
+		*blockSize = sizeof(Block_KERN);
+	}
+	break;
+	case COOKIE("KWGS"):
+	{
+		Block_KWGS* block = reinterpret_cast<Block_KWGS*>(blockBlob);
+		printf("Block_KWGS\n");
+		printf("\tunk1 = 0x%08x\n", block->unk1);
+
+		assert(block->unk1 == 0xc);
+		*blockSize = sizeof(Block_KWGS);
+	}
+	break;
+
+
 	default:
 	{
 		auto getL = [cookie](int off)

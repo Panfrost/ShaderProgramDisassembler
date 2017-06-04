@@ -58,12 +58,16 @@ struct Block_COMP
 	uint32_t unk1;
 };
 
+
+// Main header for the entire binary
 struct Block_MBS2
 {
 	// MBS2
 	uint32_t cookie;
-	uint32_t unk1;
-	uint32_t unk2;
+	// total size of the binary in bytes, minus 8 bytes for cookie and size.
+	uint32_t size;
+	// some kind of version
+	uint32_t version;
 };
 
 struct Block_VEHW

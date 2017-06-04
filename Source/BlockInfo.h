@@ -130,9 +130,8 @@ struct Block_EBIN
 	// EBIN
 	uint32_t unk2;
 	uint32_t unk3;
-	uint32_t unk4;
+	uint32_t numRelocs;
 	uint32_t unk5;
-	uint32_t unk6;
 };
 
 struct Block_FSHA
@@ -192,6 +191,5 @@ struct Block_RLOC
 	uint32_t unk3;
 	uint32_t unk4;
 	uint32_t unk5;
-	uint32_t unk6;
 
 };

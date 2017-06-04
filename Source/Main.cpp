@@ -238,12 +238,12 @@ bool ParseSingleBlock(unsigned indent, uint8_t* blockBlob, uint32_t cookie, uint
 	break;
 	case COOKIE("EBIN"):
 	{
+		uint8_t *end = blockBlob + size;
 		Block_EBIN* block = reinterpret_cast<Block_EBIN*>(blockBlob);
 		iprintf(indent, "\tunk2 = 0x%08x\n", block->unk2);
 		iprintf(indent, "\tunk3 = 0x%08x\n", block->unk3);
-		iprintf(indent, "\tunk4 = 0x%08x\n", block->unk4);
+		iprintf(indent, "\trelocs = %u\n", block->numRelocs);
 		iprintf(indent, "\tunk5 = 0x%08x\n", block->unk5);
-		iprintf(indent, "\tunk6 = 0x%08x\n", block->unk6);
 
 		// XXX: Sometimes different
 		//assert(block->unk1 == 0xd4);
@@ -253,9 +253,19 @@ bool ParseSingleBlock(unsigned indent, uint8_t* blockBlob, uint32_t cookie, uint
 		assert(block->unk5 == 0x0);
 		//assert(block->unk6 == ~0U);
 
-		// XXX: unk4...?
 		blockBlob += sizeof(Block_EBIN);
-		PrintBlocks(indent + 1, blockBlob, size - sizeof(Block_EBIN));
+
+		for (unsigned i = 0; i < block->numRelocs; i++)
+		{
+			assert(*reinterpret_cast<uint32_t*>(blockBlob) == COOKIE("RLOC"));
+			PrintBlock(indent + 1, &blockBlob);
+		}
+
+		uint32_t unk6 = *reinterpret_cast<uint32_t*>(blockBlob);
+		iprintf(indent, "\tunk6 = 0x%08x\n", unk6);
+		blockBlob += sizeof(uint32_t);
+
+		PrintBlocks(indent + 1, blockBlob, end - blockBlob);
 
 	}
 	break;
@@ -347,14 +357,12 @@ bool ParseSingleBlock(unsigned indent, uint8_t* blockBlob, uint32_t cookie, uint
 		iprintf(indent, "\tunk3 = 0x%08x\n", block->unk3);
 		iprintf(indent, "\tunk4 = 0x%08x\n", block->unk4);
 		iprintf(indent, "\tunk5 = 0x%08x\n", block->unk5);
-		iprintf(indent, "\tunk6 = 0x%08x\n", block->unk6);
 
-		assert(block->unk2 == 0x0);
-		assert(block->unk3 == 0x0);
-		assert(block->unk4 == 0x0);
-		assert(block->unk5 == 0x8);
+		//assert(block->unk2 == 0x0);
+		//assert(block->unk3 == 0x0);
+		//assert(block->unk4 == 0x0);
+		//assert(block->unk5 == 0x8);
 		// XXX: Sometimes different
-		//assert(block->unk6 == 0x0);
 	}
 	break;
 	case COOKIE("FOTV"):

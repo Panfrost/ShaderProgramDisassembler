@@ -90,15 +90,14 @@ bool ParseSingleBlock(unsigned indent, uint8_t* blockBlob, uint32_t cookie, uint
 	case COOKIE("MPB1"):
 	{
 		Block_MPB1* block = reinterpret_cast<Block_MPB1*>(blockBlob);
+		iprintf(indent, "\tunk1 = 0x%08x\n", block->unk1);
+		iprintf(indent, "\tunk2 = 0x%08x\n", block->unk2);
 		assert(block->unk2 == 0);
+
+		PrintBlocks(indent + 1, blockBlob + sizeof(Block_MPB1),
+			    size - sizeof(Block_MPB1));
 	}
 	break;
-	case COOKIE("VERT"):
-		break;
-	case COOKIE("FRAG"):
-		break;
-	case COOKIE("COMP"):
-		break;
 	case COOKIE("MBS2"):
 	{
 		Block_MBS2* block = reinterpret_cast<Block_MBS2*>(blockBlob);
@@ -115,6 +114,9 @@ bool ParseSingleBlock(unsigned indent, uint8_t* blockBlob, uint32_t cookie, uint
 		assert(block->unk4 == 0x0);
 	}
 	break;
+	case COOKIE("VERT"):
+	case COOKIE("FRAG"):
+	case COOKIE("COMP"):
 	case COOKIE("CVER"):
 		PrintBlocks(indent + 1, blockBlob, size);
 		break;
@@ -353,7 +355,7 @@ bool ParseSingleBlock(unsigned indent, uint8_t* blockBlob, uint32_t cookie, uint
 	case COOKIE("RLOC"):
 	{
 		Block_RLOC* block = reinterpret_cast<Block_RLOC*>(blockBlob);
-		iprintf(indent, "\tunk2 = 0x%08x\n", block->unk2);
+		iprintf(indent, "\tlocation = %u\n", block->location);
 		iprintf(indent, "\tunk3 = 0x%08x\n", block->unk3);
 		iprintf(indent, "\tunk4 = 0x%08x\n", block->unk4);
 		iprintf(indent, "\tunk5 = 0x%08x\n", block->unk5);
@@ -443,7 +445,7 @@ int main(int argc, char** argv)
 	std::vector<uint8_t> file;
 	if (ReadFile(&file, argv[1]))
 	{
-		PrintFile(&file);
+		//PrintFile(&file);
 		PrintBlocks(0, file.data(), file.size());
 	}
 

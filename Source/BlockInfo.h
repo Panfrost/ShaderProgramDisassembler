@@ -187,7 +187,7 @@ struct Block_KWGS
 struct Block_RLOC
 {
 	// RLOC
-	uint32_t unk2;
+	uint32_t location; //uniform location in GL, I think
 	uint32_t unk3;
 	uint32_t unk4;
 	uint32_t unk5;
